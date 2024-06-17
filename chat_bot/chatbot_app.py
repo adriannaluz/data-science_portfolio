@@ -7,8 +7,7 @@ from chatbot_funcs import sendPrompt, run_llm_model, create_vectordb, load_ollam
 
 if __name__ == '__main__':
     # Starting ollama environment
-    # st.write("Loading the llm model")
-    # load_ollama()
+    load_ollama()
 
     vector_database_path = np.array(os.listdir("vector_database"))
 

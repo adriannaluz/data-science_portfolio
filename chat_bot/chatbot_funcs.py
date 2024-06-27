@@ -1,5 +1,7 @@
 import os
 import subprocess
+import pandas as pd
+import streamlit as st
 
 from dotenv import load_dotenv
 from langchain.chains import RetrievalQA
@@ -43,10 +45,8 @@ def create_vectordb(pdf_path: str):
     ollama_embeddings = OllamaEmbeddings(model="llama2")
 
     # Creating vector database with embedded chunks
-    persist_path = (
-        "/home/adrianna/Desktop/data-science_portfolio"
-        "/chat_bot/vector_database"
-    )
+    load_dotenv()
+    persist_path = os.getenv("persist_path")
     vectorstore = Chroma.from_documents(
         documents=docs,
         embedding=ollama_embeddings,
@@ -59,13 +59,12 @@ def create_vectordb(pdf_path: str):
 
 
 def run_llm_model():
+    load_dotenv()
+
     model = Ollama(base_url="http://localhost:11434", model="llama2")
 
     # path where the Chroma's vector database is saved
-    persist_path = (
-        "/home/adrianna/Desktop/data-science_portfolio"
-        "/chat_bot/vector_database"
-    )
+    persist_path = os.getenv("persist_path")
 
     ollama_embeddings = OllamaEmbeddings(model="llama2")
 
@@ -106,3 +105,28 @@ def sendPrompt(prompt):
 
     return response
 
+
+def load_csv(path: str = ""):
+    path = st.file_uploader(
+        "Por favor sube tus transacciones bancarias en"
+        "formato .csv para empezar con el analisis"
+    )
+    try:
+        if path is None:
+            # loading .env
+            load_dotenv()
+
+            # Getting .csv file path
+            path = os.getenv("path")
+
+            # Loading the data
+            df = pd.read_csv(path)
+
+        else:
+            # Loading the data
+            df = pd.read_csv(path)
+
+        return df
+
+    except FileNotFoundError:
+        print("File does not exist.")

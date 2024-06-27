@@ -28,6 +28,27 @@ else:
     df = pd.read_csv(csv_file)
 
 
+def load_csv(path):
+    try:
+        if csv_file is None:
+            # loading .env
+            load_dotenv()
+
+            # Getting .csv file path
+            csv_file = os.getenv("path")
+
+            # Loading the data
+            df = pd.read_csv(csv_file)
+
+        else:
+            # Loading the data
+            df = pd.read_csv(csv_file)
+    except FileNotFoundError:
+        print("File not found.")
+
+    return df
+
+
 def addlabels(x, y, y_pos):
     for i in range(len(x)):
         plt.text(i + 1, y_pos, y[i], ha="center")

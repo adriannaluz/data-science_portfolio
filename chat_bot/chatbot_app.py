@@ -3,6 +3,7 @@ import time
 import numpy as np
 import streamlit as st
 
+from dotenv import load_dotenv
 from chatbot_funcs import sendPrompt, run_llm_model, create_vectordb, load_ollama
 
 if __name__ == '__main__':
@@ -16,7 +17,8 @@ if __name__ == '__main__':
         print("Creating vector database with Chroma")
         start = time.time()
 
-        pdf_path = "/home/adrianna/Desktop/neobank/chatbot/ollama/introduccion-a-las-finanzas-personales.pdf"
+        load_dotenv()
+        pdf_path = os.getenv("pdf_path")
         llm_model = 'llama2'
         create_vectordb(pdf_path, llm_model)
 
